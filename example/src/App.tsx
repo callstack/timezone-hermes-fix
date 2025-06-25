@@ -1,20 +1,88 @@
-import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from 'timezone-hermes-fix';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ */
 
-const result = multiply(3, 7);
+import React from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
 
-export default function App() {
+// TODO Describe differences between react-native-localize and this library
+//import * as RNLocalize from 'react-native-localize';
+import {
+  useTimezoneHermesFix,
+  NativeTimezoneHermesFix,
+} from 'timezone-hermes-fix';
+
+const TimezoneAwareComponent = () => {
+  const { currentTimezone } = useTimezoneHermesFix();
+
+  const date = new Date(
+    'Mon Apr 28 2025 22:50:36 GMT+0900 (Japan Standard Time)'
+  );
+
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
+    <View>
+      <Text>Current timezone: {currentTimezone}</Text>
+      <Text>
+        Date: {date.getHours()}:{date.getMinutes()}
+      </Text>
     </View>
+  );
+};
+
+const DateComponent = () => {
+  const date = new Date(
+    'Mon Apr 28 2025 22:50:36 GMT+0900 (Japan Standard Time)'
+  );
+  return (
+    <View>
+      <Text>
+        Fixed Date: {date.getHours()}:{date.getMinutes()}
+      </Text>
+    </View>
+  );
+};
+
+function App(): React.JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: 'white',
+  };
+
+  return (
+    <SafeAreaView style={backgroundStyle}>
+      <StatusBar
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor={backgroundStyle.backgroundColor}
+      />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={backgroundStyle}
+      >
+        <View
+          style={{
+            backgroundColor: 'white',
+          }}
+        >
+          <TimezoneAwareComponent />
+          <DateComponent />
+          {NativeTimezoneHermesFix.getSupportedTimeZones().map((x) => (
+            <Text key={x}>{x}</Text>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

@@ -10499,6 +10499,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-localize@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "react-native-localize@npm:3.4.1"
+  peerDependencies:
+    react: ">=18.1.0"
+    react-native: ">=0.70.0"
+    react-native-macos: ">=0.70.0"
+  peerDependenciesMeta:
+    react-native-macos:
+      optional: true
+  checksum: 2ec4c1992d88c208af3688e9be128ef16c293280677d5493bcae7cee7f66f59c73b91db2370b1879383b9ae5618caab3d569e51024b11d976a732afd5440e87d
+  languageName: node
+  linkType: hard
+
 "react-native-monorepo-config@npm:^0.1.8, react-native-monorepo-config@npm:^0.1.9":
   version: 0.1.9
   resolution: "react-native-monorepo-config@npm:0.1.9"
@@ -11864,6 +11878,7 @@ __metadata:
     react: 19.0.0
     react-native: nightly
     react-native-builder-bob: ^0.40.12
+    react-native-localize: ^3.4.1
     react-native-monorepo-config: ^0.1.9
   languageName: unknown
   linkType: soft

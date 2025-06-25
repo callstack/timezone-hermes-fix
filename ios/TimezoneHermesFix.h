@@ -1,5 +1,5 @@
 #import <TimezoneHermesFixSpec/TimezoneHermesFixSpec.h>
 
-@interface TimezoneHermesFix : NSObject <NativeTimezoneHermesFixSpec>
+@interface TimezoneHermesFix :  NativeTimezoneHermesFixSpecBase <NativeTimezoneHermesFixSpec>
 
 @end

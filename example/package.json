@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "react": "19.0.0",
-    "react-native": "nightly"
+    "react-native": "nightly",
+    "react-native-localize": "^3.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
