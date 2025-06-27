@@ -54,37 +54,3 @@ void TimezoneHermesFix::coSieDzieje(jlong jsRuntimePtr) {
         LOGE("Exception calling resetTimezoneCache: %s", error.what());
     }
 }
-
-//void TimezoneHermesFix::resetHermesTimezoneCacheNative(
-//    JNIEnv* env,
-//    jclass clazz,
-//    jlong jsRuntimePtr,
-//    jobject callInvokerHolder
-//) {
-//    LOGD("resetHermesTimezoneCacheNative called with jsRuntimePtr: %ld", jsRuntimePtr);
-//
-//    // Get JSI Runtime pointer (equivalent to iOS cxxBridge.runtime)
-//    auto jsiRuntime = reinterpret_cast<jsi::Runtime*>(jsRuntimePtr);
-//    if (jsiRuntime == nullptr) {
-//        LOGE("jsiRuntime is null");
-//        return;
-//    }
-//
-//    // Cast to HermesRuntime (equivalent to iOS reinterpret_cast)
-////    auto hermesRuntime = reinterpret_cast<HermesRuntime*>(jsiRuntime);
-////    if (hermesRuntime == nullptr) {
-////        LOGE("hermesRuntime is null - not running on Hermes");
-////        return;
-////    }
-//
-//    try {
-//        // Call resetTimezoneCache on Hermes runtime (same as iOS)
-////        hermesRuntime->resetTimezoneCache();
-//        LOGD("Successfully called resetTimezoneCache on Hermes runtime");
-//
-//    } catch (const jsi::JSError& error) {
-//        LOGE("JSI Error calling resetTimezoneCache: %s", error.getMessage().c_str());
-//    } catch (const std::exception& error) {
-//        LOGE("Exception calling resetTimezoneCache: %s", error.what());
-//    }
-//}

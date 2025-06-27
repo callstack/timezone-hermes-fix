@@ -25,12 +25,8 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
   private val mReactContext: ReactApplicationContext = reactContext
   private var receiver: BroadcastReceiver? = null
   private var currentTimezoneName: String = TimeZone.getDefault().id
+
   private external fun initHybrid(): HybridData
-
-  // Native method declaration - must be static to match C++ signature
- // @OptIn(FrameworkAPI::class)
-//  external fun resetHermesTimezoneCacheNative(number: Number, number2: Number)
-
   private external fun coSieDzieje(jsRuntimePtr: Long)
 
   init {
@@ -81,8 +77,6 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
       }
 
       coSieDzieje(jsRuntimePtr)
-      // Call the native method to reset Hermes timezone cache
-//      resetHermesTimezoneCacheNative(2,2)
 
       // Emit the timezone change event to JavaScript
       emitOnTimezoneChange(getCurrentTimeZone())
@@ -91,15 +85,12 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
       android.util.Log.e(NAME, "Error resetting Hermes timezone cache: ${e.message}", e)
     }
   }
-  private fun emitOnTimezoneChange(timezoneInfo: WritableMap) {
-    mReactContext
-      .getJSModule(com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-      ?.emit("onTimezoneChange", timezoneInfo)
-  }
+
   override fun getName(): String {
     return NAME
   }
 
+  // TODO compare values with iOS 
   override fun getCurrentTimeZone(): WritableMap {
     val tz = TimeZone.getDefault()
     val timezoneInfo = WritableNativeMap()
@@ -132,7 +123,5 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
       System.loadLibrary("timezone-hermes-fix")
     }
     const val NAME = "TimezoneHermesFix"
-
-
   }
 }

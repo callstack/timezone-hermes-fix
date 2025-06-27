@@ -74,8 +74,10 @@ function App(): React.JSX.Element {
             backgroundColor: 'white',
           }}
         >
+          {/* TODO Add some interesting styles*/}
           <TimezoneAwareComponent />
           <DateComponent />
+          {/* TODO add a second tab */}
           {NativeTimezoneHermesFix.getSupportedTimeZones().map((x) => (
             <Text key={x}>{x}</Text>
           ))}
