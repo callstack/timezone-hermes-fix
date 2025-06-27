@@ -17,7 +17,7 @@ using namespace facebook::hermes;
 void TimezoneHermesFix::registerNatives() {
     registerHybrid({
         makeNativeMethod("initHybrid", TimezoneHermesFix::initHybrid),
-        makeNativeMethod("coSieDzieje", TimezoneHermesFix::coSieDzieje),
+        makeNativeMethod("resetTzHermes", TimezoneHermesFix::resetTzHermes),
     });
 }
 
@@ -26,8 +26,8 @@ jni::local_ref<TimezoneHermesFix::jhybriddata> TimezoneHermesFix::initHybrid(
     return makeCxxInstance();
 }
 
-void TimezoneHermesFix::coSieDzieje(jlong jsRuntimePtr) {
-    LOGD("coSieDzieje called with jsRuntimePtr: %ld", jsRuntimePtr);
+void TimezoneHermesFix::resetTzHermes(jlong jsRuntimePtr) {
+    LOGD("resetTzHermes called with jsRuntimePtr: %ld", jsRuntimePtr);
 
     // Get JSI Runtime pointer (equivalent to iOS cxxBridge.runtime)
     auto jsiRuntime = reinterpret_cast<jsi::Runtime*>(jsRuntimePtr);

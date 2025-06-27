@@ -27,7 +27,7 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
   private var currentTimezoneName: String = TimeZone.getDefault().id
 
   private external fun initHybrid(): HybridData
-  private external fun coSieDzieje(jsRuntimePtr: Long)
+  private external fun resetTzHermes(jsRuntimePtr: Long)
 
   init {
     receiver = object : BroadcastReceiver() {
@@ -76,7 +76,7 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
         return
       }
 
-      coSieDzieje(jsRuntimePtr)
+      resetTzHermes(jsRuntimePtr)
 
       // Emit the timezone change event to JavaScript
       emitOnTimezoneChange(getCurrentTimeZone())
@@ -90,7 +90,7 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
     return NAME
   }
 
-  // TODO compare values with iOS 
+  // TODO compare values with iOS
   override fun getCurrentTimeZone(): WritableMap {
     val tz = TimeZone.getDefault()
     val timezoneInfo = WritableNativeMap()

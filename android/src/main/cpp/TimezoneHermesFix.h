@@ -13,7 +13,7 @@ public:
     static void registerNatives();
     static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject>);
 
-    void coSieDzieje(jlong jsRuntimePtr);
+    void resetTzHermes(jlong jsRuntimePtr);
 
 private:
     friend HybridBase;
