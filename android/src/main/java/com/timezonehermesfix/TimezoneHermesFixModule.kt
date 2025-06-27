@@ -100,7 +100,6 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
     val tz = TimeZone.getDefault()
     val timezoneInfo = WritableNativeMap()
     timezoneInfo.putString("name", tz.id)
-    timezoneInfo.putString("abbreviation", tz.displayName)
     timezoneInfo.putInt("secondsFromGMT", tz.getOffset(Date().time) / 1000)
     timezoneInfo.putBoolean("isDaylightSavingTime", tz.inDaylightTime(Date()))
     return timezoneInfo

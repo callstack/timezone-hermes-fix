@@ -4,7 +4,6 @@ import type { EventEmitter } from 'react-native/Libraries/Types/CodegenTypes';
 
 type CurrentTimezone = {
   name: string;
-  abbreviation: string;
   secondsFromGMT: number;
   isDaylightSavingTime: boolean;
 };

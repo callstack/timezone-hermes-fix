@@ -97,7 +97,6 @@ RCT_EXPORT_MODULE()
   NSTimeZone *tz = [NSTimeZone localTimeZone];
   NSDictionary *timezoneInfo = @{
     @"name": tz.name,
-    @"abbreviation": tz.abbreviation ?: @"",
     @"secondsFromGMT": @(tz.secondsFromGMT),
     @"isDaylightSavingTime": @(tz.isDaylightSavingTime)
   };
