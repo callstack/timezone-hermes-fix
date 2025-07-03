@@ -1,4 +1,3 @@
-// TODO expose it
 import NativeTimezoneHermesFix from './NativeTimezoneHermesFix';
 
 export { NativeTimezoneHermesFix };
