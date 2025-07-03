@@ -1,53 +1,71 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  StyleSheet,
   Text,
   useColorScheme,
   View,
+  TouchableOpacity,
 } from 'react-native';
 
-// TODO Describe differences between react-native-localize and this library
-//import * as RNLocalize from 'react-native-localize';
 import {
   useTimezoneHermesFix,
   NativeTimezoneHermesFix,
 } from 'timezone-hermes-fix';
 
+const stringDate = 'Mon Apr 28 2025 22:50:36 GMT+0900';
+
 const TimezoneAwareComponent = () => {
   const { currentTimezone } = useTimezoneHermesFix();
-
-  const date = new Date(
-    'Mon Apr 28 2025 22:50:36 GMT+0900 (Japan Standard Time)'
-  );
+  const date = new Date(stringDate);
 
   return (
-    <View>
-      <Text>Current timezone: {currentTimezone}</Text>
-      <Text>
-        Date: {date.getHours()}:{date.getMinutes()}
+    <View style={styles.card}>
+      <Text style={styles.cardTitle}>Timezone fix</Text>
+      <Text style={styles.timezoneText}>{currentTimezone}</Text>
+      <Text style={styles.dateText}>
+        {date.toLocaleTimeString()} - TimezoneOffset {date.getTimezoneOffset()}
       </Text>
     </View>
   );
 };
 
 const DateComponent = () => {
-  const date = new Date(
-    'Mon Apr 28 2025 22:50:36 GMT+0900 (Japan Standard Time)'
-  );
+  const date = new Date(stringDate);
+
   return (
-    <View>
-      <Text>
-        Fixed Date: {date.getHours()}:{date.getMinutes()}
+    <View style={styles.card}>
+      <Text style={styles.cardTitle}>No timezone fix</Text>
+      <Text style={styles.dateText}>
+        {date.toLocaleTimeString()} - TimezoneOffset {date.getTimezoneOffset()}
       </Text>
+    </View>
+  );
+};
+
+const TimezonesListComponent = () => {
+  const [showAll, setShowAll] = useState(false);
+  const timezones = NativeTimezoneHermesFix.getSupportedTimeZones();
+  const displayTimezones = showAll ? timezones : timezones.slice(0, 5);
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.cardTitle}>Available Timezones</Text>
+      {displayTimezones.map((timezone) => (
+        <Text key={timezone} style={styles.timezoneItem}>
+          {timezone}
+        </Text>
+      ))}
+      <TouchableOpacity
+        onPress={() => setShowAll(!showAll)}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>
+          {showAll ? 'Show Less' : 'Show More'}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -56,7 +74,8 @@ function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: 'white',
+    backgroundColor: isDarkMode ? '#1a1a1a' : '#f5f5f5',
+    flex: 1,
   };
 
   return (
@@ -68,23 +87,84 @@ function App(): React.JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}
+        contentContainerStyle={styles.scrollContent}
       >
-        <View
-          style={{
-            backgroundColor: 'white',
-          }}
-        >
-          {/* TODO Add some interesting styles*/}
+        <View style={styles.container}>
+          <Text style={[styles.title, isDarkMode && styles.titleDark]}>
+            Timezone Demo
+          </Text>
           <TimezoneAwareComponent />
           <DateComponent />
-          {/* TODO add a second tab */}
-          {NativeTimezoneHermesFix.getSupportedTimeZones().map((x) => (
-            <Text key={x}>{x}</Text>
-          ))}
+          <TimezonesListComponent />
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+  },
+  container: {
+    padding: 16,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 24,
+    color: '#000',
+  },
+  titleDark: {
+    color: '#fff',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+    color: '#1a1a1a',
+  },
+  timezoneText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#007AFF',
+    marginBottom: 8,
+  },
+  dateText: {
+    fontSize: 16,
+    color: '#666',
+  },
+  timezoneItem: {
+    fontSize: 14,
+    color: '#333',
+    paddingVertical: 4,
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 12,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+});
 
 export default App;
