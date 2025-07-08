@@ -1,9 +1,33 @@
-// Example usage in React Native
 import { useEffect, useState } from 'react';
 import type { EventSubscription } from 'react-native';
 import NativeTimezoneHermesFix from './NativeTimezoneHermesFix';
 import * as React from 'react';
 
+/**
+ * A React hook that provides real-time timezone information and automatically updates
+ * when the device timezone changes.
+ *
+ * This hook addresses timezone-related issues in Hermes JavaScript engine by:
+ * - Providing the current timezone name
+ * - Listening for timezone changes and updating the state accordingly
+ * - Properly cleaning up event subscriptions to prevent memory leaks
+ *
+ * @returns An object containing the current timezone information
+ * @returns returns.currentTimezone - The name of the current device timezone (e.g., "America/New_York")
+ *
+ * @example
+ * ```tsx
+ * import { useTimezoneHermesFix } from './useTimezoneHermesFix';
+ *
+ * function MyComponent() {
+ *   const { currentTimezone } = useTimezoneHermesFix();
+ *
+ *   return (
+ *     <Text>Current timezone: {currentTimezone}</Text>
+ *   );
+ * }
+ * ```
+ */
 const useTimezoneHermesFix = () => {
   const onTimezoneChangeSubscription = React.useRef<null | EventSubscription>(
     null
@@ -15,7 +39,6 @@ const useTimezoneHermesFix = () => {
   useEffect(() => {
     onTimezoneChangeSubscription.current =
       NativeTimezoneHermesFix.onTimezoneChange((timezoneInfo) => {
-        console.log('Timezone changed:', timezoneInfo);
         setCurrentTimezone(timezoneInfo.name);
       });
 
