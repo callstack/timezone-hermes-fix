@@ -13,7 +13,7 @@ import {
 import {
   useTimezoneHermesFix,
   NativeTimezoneHermesFix,
-} from 'timezone-hermes-fix';
+} from '@callstack/timezone-hermes-fix';
 
 const stringDate = 'Mon Apr 28 2025 22:50:36 GMT+0900';
 

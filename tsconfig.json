@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "timezone-hermes-fix": ["./src/index"]
+      "@callstack/timezone-hermes-fix": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
