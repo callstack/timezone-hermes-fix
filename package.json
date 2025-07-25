@@ -1,5 +1,5 @@
 {
-  "name": "timezone-hermes-fix",
+  "name": "@callstack/timezone-hermes-fix",
   "version": "0.1.0",
   "description": "Fix for resetting the timezone cache, while the timezone is changed",
   "main": "./lib/module/index.js",
