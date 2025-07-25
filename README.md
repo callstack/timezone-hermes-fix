@@ -149,10 +149,4 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 ## Made with ❤️ at Callstack
 
-`timezone-hermes-fix` is an open source project and will always remain free to use. If you think it's cool, please star it 🌟. [Callstack][callstack-readme-with-love] is a group of React and React Native geeks, contact us at [hello@callstack.com](mailto:hello@callstack.com) if you need any help with these or just want to say hi!
-
-Like the project? ⚛️ [Join the team](https://callstack.com/careers/?utm_campaign=Senior_RN&utm_source=github&utm_medium=readme) who does amazing stuff for clients and drives React Native Open Source! 🔥
-
-<!-- badges -->
-
-[callstack-readme-with-love]: https://callstack.com/?utm_source=github.com&utm_medium=referral&utm_campaign=repack&utm_term=readme-with-love
+`timezone-hermes-fix` is an open source project and will always remain free to use. If you think it's cool, please star it 🌟. Callstack is a group of React and React Native geeks, contact us at hello@callstack.com if you need any help with these or just want to say hi!
