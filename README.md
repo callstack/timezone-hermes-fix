@@ -28,13 +28,13 @@ This library fixes these [known issues](https://github.com/facebook/hermes/pull/
 ### Using Yarn (recommended)
 
 ```sh
-yarn add timezone-hermes-fix
+yarn add @callstack/timezone-hermes-fix
 ```
 
 ### Using npm
 
 ```sh
-npm install timezone-hermes-fix
+npm install @callstack/timezone-hermes-fix
 ```
 
 ## 🎯 Usage
@@ -46,7 +46,7 @@ The easiest way to use the library is with the provided React hook:
 ```tsx
 import React from 'react';
 import { View, Text } from 'react-native';
-import { useTimezoneHermesFix } from 'timezone-hermes-fix';
+import { useTimezoneHermesFix } from '@callstack/timezone-hermes-fix';
 
 export default function App() {
   const { currentTimezone } = useTimezoneHermesFix();
@@ -65,7 +65,7 @@ export default function App() {
 For more control, you can use the native module directly:
 
 ```tsx
-import { NativeTimezoneHermesFix } from 'timezone-hermes-fix';
+import { NativeTimezoneHermesFix } from '@callstack/timezone-hermes-fix';
 
 // Get current timezone information
 const timezone = NativeTimezoneHermesFix.getCurrentTimeZone();
@@ -151,4 +151,4 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 ## Made with ❤️ at Callstack
 
-`timezone-hermes-fix` is an open source project and will always remain free to use. If you think it's cool, please star it 🌟. Callstack is a group of React and React Native geeks, contact us at hello@callstack.com if you need any help with these or just want to say hi!
+`@callstack/timezone-hermes-fix` is an open source project and will always remain free to use. If you think it's cool, please star it 🌟. Callstack is a group of React and React Native geeks, contact us at hello@callstack.com if you need any help with these or just want to say hi!
