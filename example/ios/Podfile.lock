@@ -2123,7 +2123,7 @@ PODS:
     - React-utils (= 0.80.2)
     - SocketRocket
   - SocketRocket (0.7.1)
-  - TimezoneHermesFix (0.1.0):
+  - TimezoneHermesFix (0.1.1):
     - boost
     - DoubleConversion
     - fast_float
@@ -2457,7 +2457,7 @@ SPEC CHECKSUMS:
   ReactCodegen: 9ea66ee246511816b72e9d6e380f884b7b3b99d7
   ReactCommon: 7aca047f2f453a7d7f0adeccb63810d61829235a
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  TimezoneHermesFix: 196e8875d660f8640172e4afb983d03c9224ce27
+  TimezoneHermesFix: 9ad05aeb4aa5eb785b7d9e43a6f8c4386dba4f5d
   Yoga: 1c52fbd270869e556504def7e94fffbf67f53f7b
 
 PODFILE CHECKSUM: 106b4f1fb327b8f6b250ffacf2b5dac7a454edfd

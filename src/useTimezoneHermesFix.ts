@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { EventSubscription } from 'react-native';
 import NativeTimezoneHermesFix from './NativeTimezoneHermesFix';
-import * as React from 'react';
 
 /**
  * A React hook that provides real-time timezone information and automatically updates
@@ -29,9 +28,7 @@ import * as React from 'react';
  * ```
  */
 const useTimezoneHermesFix = () => {
-  const onTimezoneChangeSubscription = React.useRef<null | EventSubscription>(
-    null
-  );
+  const onTimezoneChangeSubscription = useRef<null | EventSubscription>(null);
 
   const [currentTimezone, setCurrentTimezone] = useState(
     NativeTimezoneHermesFix.getCurrentTimeZone().name

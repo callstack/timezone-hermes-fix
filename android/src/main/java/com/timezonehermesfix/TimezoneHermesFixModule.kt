@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
@@ -14,10 +13,8 @@ import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.turbomodule.core.CallInvokerHolderImpl
-import com.facebook.react.bridge.ReactContext
 import com.facebook.react.common.annotations.FrameworkAPI
 import com.facebook.jni.HybridData
-import java.time.Instant
 import java.util.Date
 import java.util.TimeZone
 
@@ -88,8 +85,7 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
   override fun getName(): String {
     return NAME
   }
-
-  @RequiresApi(Build.VERSION_CODES.O)
+  
   override fun getCurrentTimeZone(): WritableMap {
     val tz = TimeZone.getDefault()
     val timezoneInfo = WritableNativeMap()
