@@ -7,7 +7,7 @@ import {
   Text,
   useColorScheme,
   View,
-  TouchableOpacity,
+  TouchableHighlight,
 } from 'react-native';
 
 import {
@@ -58,14 +58,14 @@ const TimezonesListComponent = () => {
           {timezone}
         </Text>
       ))}
-      <TouchableOpacity
+      <TouchableHighlight
         onPress={() => setShowAll(!showAll)}
         style={styles.button}
       >
         <Text style={styles.buttonText}>
           {showAll ? 'Show Less' : 'Show More'}
         </Text>
-      </TouchableOpacity>
+      </TouchableHighlight>
     </View>
   );
 };

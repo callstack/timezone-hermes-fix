@@ -53,21 +53,18 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
   @OptIn(FrameworkAPI::class)
   private fun onTimezoneChanged() {
     try {
-      // Get the Catalyst instance from React context
       val catalystInstance = mReactContext.catalystInstance
       if (catalystInstance == null) {
         android.util.Log.e(NAME, "CatalystInstance is null")
         return
       }
 
-      // Get the CallInvoker
       val callInvokerHolder = catalystInstance.jsCallInvokerHolder as? CallInvokerHolderImpl
       if (callInvokerHolder == null) {
         android.util.Log.e(NAME, "CallInvokerHolder is null or not of expected type")
         return
       }
 
-      // Get the JSI Runtime pointer
       val javaScriptContextHolder = mReactContext.javaScriptContextHolder
       if (javaScriptContextHolder == null) {
         android.util.Log.e(NAME, "JavaScriptContextHolder is null")
@@ -81,8 +78,6 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
       }
 
       resetTzHermes(jsRuntimePtr)
-
-      // Emit the timezone change event to JavaScript
       emitOnTimezoneChange(getCurrentTimeZone())
 
     } catch (e: Exception) {
@@ -94,7 +89,6 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
     return NAME
   }
 
-  // TODO compare values with iOS
   @RequiresApi(Build.VERSION_CODES.O)
   override fun getCurrentTimeZone(): WritableMap {
     val tz = TimeZone.getDefault()
