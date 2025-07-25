@@ -1,5 +1,5 @@
-import TimezoneHermesFix from './NativeTimezoneHermesFix';
+import NativeTimezoneHermesFix from './NativeTimezoneHermesFix';
 
-export function multiply(a: number, b: number): number {
-  return TimezoneHermesFix.multiply(a, b);
-}
+export { NativeTimezoneHermesFix };
+
+export { useTimezoneHermesFix } from './useTimezoneHermesFix';
