@@ -1,6 +1,6 @@
 {
-  "name": "timezone-hermes-fix",
-  "version": "0.1.0",
+  "name": "@callstack/timezone-hermes-fix",
+  "version": "0.1.1",
   "description": "Fix for resetting the timezone cache, while the timezone is changed",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
@@ -56,7 +56,8 @@
   },
   "homepage": "https://github.com/callstack/timezone-hermes-fix#readme",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.6.0",
