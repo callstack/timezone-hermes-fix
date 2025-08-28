@@ -60,14 +60,8 @@ android {
         cmake {
             cppFlags "-O2 -frtti -fexceptions -Wall -Wno-unused-variable -fstack-protector-all"
             arguments "-DANDROID_STL=c++_shared",
-                    "-DREACT_NATIVE_DIR=${REACT_NATIVE_DIR}",
-                    // Add 16KB page size support for Android 15+
-                    "-DANDROID_SUPPORT_16KB_PAGE_SIZE=1"
+                    "-DREACT_NATIVE_DIR=${REACT_NATIVE_DIR}"
             abiFilters(*reactNativeArchitectures())
-            
-            // Add 16KB page size linker flags for NDK r27+
-            // This ensures compatibility with Android 15+ devices using 16KB memory pages
-            targets "timezone-hermes-fix"
         }
     }
   }
@@ -104,14 +98,6 @@ android {
   externalNativeBuild {
     cmake {
       path "CMakeLists.txt"
-    }
-  }
-  
-  // Add packaging options to ensure proper alignment
-  packagingOptions {
-    // Ensure native libraries are properly aligned for 16KB page sizes
-    jniLibs {
-      useLegacyPackaging = false
     }
   }
 }

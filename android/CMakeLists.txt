@@ -26,31 +26,6 @@ find_package(ReactAndroid REQUIRED CONFIG)
 find_package(hermes-engine REQUIRED CONFIG)
 string(APPEND CMAKE_CXX_FLAGS " -DJS_RUNTIME_HERMES=1")
 
-# Add 16KB page size support for Android 15+
-# This ensures compatibility with devices using 16KB memory pages
-if(ANDROID)
-    # Set maximum page size to 16KB (16384 bytes) for ELF alignment
-    target_link_options(
-        ${PACKAGE_NAME}
-        PRIVATE
-        "-Wl,-z,max-page-size=16384"
-    )
-    
-    # Add common page size to ensure compatibility
-    target_link_options(
-        ${PACKAGE_NAME}
-        PRIVATE
-        "-Wl,-z,common-page-size=16384"
-    )
-    
-    # Ensure proper alignment for sections
-    target_link_options(
-        ${PACKAGE_NAME}
-        PRIVATE
-        "-Wl,-z,separate-loadable-segments"
-    )
-endif()
-
 target_link_libraries(
         ${PACKAGE_NAME}
         hermes-engine::libhermes
@@ -88,3 +63,4 @@ target_link_libraries(
     fbjni::fbjni
     ReactAndroid::jsi
 )
+
