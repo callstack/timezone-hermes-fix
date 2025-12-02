@@ -10,25 +10,25 @@
     "build:ios": "react-native build-ios --mode Debug"
   },
   "dependencies": {
-    "react": "19.0.0",
-    "react-native": "0.80.2"
+    "react": "19.1.1",
+    "react-native": "0.82.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "18.0.0",
-    "@react-native-community/cli-platform-android": "18.0.0",
-    "@react-native-community/cli-platform-ios": "18.0.0",
-    "@react-native/babel-preset": "0.80.2",
-    "@react-native/eslint-config": "0.80.2",
-    "@react-native/metro-config": "0.80.2",
-    "@react-native/typescript-config": "0.80.2",
-    "@types/react": "^19.0.0",
+    "@react-native-community/cli": "20.0.0",
+    "@react-native-community/cli-platform-android": "20.0.0",
+    "@react-native-community/cli-platform-ios": "20.0.0",
+    "@react-native/babel-preset": "0.82.1",
+    "@react-native/eslint-config": "0.82.1",
+    "@react-native/metro-config": "0.82.1",
+    "@react-native/typescript-config": "0.82.1",
+    "@types/react": "^19.1.1",
     "react-native-builder-bob": "^0.40.12",
     "react-native-monorepo-config": "^0.1.9"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }

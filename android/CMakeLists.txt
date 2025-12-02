@@ -26,11 +26,6 @@ find_package(ReactAndroid REQUIRED CONFIG)
 find_package(hermes-engine REQUIRED CONFIG)
 string(APPEND CMAKE_CXX_FLAGS " -DJS_RUNTIME_HERMES=1")
 
-target_link_libraries(
-        ${PACKAGE_NAME}
-        hermes-engine::libhermes
-)
-
 target_include_directories(
     ${PACKAGE_NAME}
     PRIVATE
@@ -62,6 +57,7 @@ target_link_libraries(
     log
     fbjni::fbjni
     ReactAndroid::jsi
+    hermes-engine::hermesvm
 )
 
 # Enable Android 16kb native library alignment
