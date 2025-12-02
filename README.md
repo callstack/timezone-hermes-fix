@@ -1,17 +1,13 @@
 # 🕐 Timezone Hermes Fix
 
-<!-- TODO -->
-<!-- [![npm version](https://badge.fury.io/js/timezone-hermes-fix.svg)](https://badge.fury.io/js/timezone-hermes-fix)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/callstack/timezone-hermes-fix/workflows/CI/badge.svg)](https://github.com/callstack/timezone-hermes-fix/actions) -->
-
 **Timezone Hermes Fix** is a cross-platform React Native library that provides a robust workaround for timezone-related issues when using the Hermes JavaScript engine. It includes native modules for both Android and iOS, designed as a drop-in solution for React Native projects requiring accurate timezone handling.
 
-## 🚀 Support
-<!-- https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts -->
+## 🚀 React Native Support
 
-> [!WARNING]  
-> This library is supported from React Native 0.80.2 and above.
+| Library Version | React Native Version |
+| --------------- | -------------------- |
+| 0.1.x - 0.3.x   | 0.80.2 - 0.81.X      |
+| 0.4.0+          | 0.82.x and above     |
 
 ## 🔧 The Problem
 
