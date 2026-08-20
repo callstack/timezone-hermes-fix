@@ -1,8 +1,6 @@
 #import "TimezoneHermesFix.h"
 #import <ReactCommon/RCTTurboModule.h>
-#import <jsi/jsi.h>
-#import <React/RCTBridge+Private.h>
-#import <React/RCTBridge.h>
+#import <ReactCommon/CallInvoker.h>
 #import <React/RCTUIManager.h>
 #import <React/RCTUIManagerUtils.h>
 #import <React/RCTUtils.h>
@@ -12,11 +10,10 @@
 @implementation TimezoneHermesFix
 {
   NSString *_currentTimezoneName;
+  std::shared_ptr<facebook::react::CallInvoker> _jsInvoker;
 }
 
 RCT_EXPORT_MODULE()
-
-@synthesize bridge = _bridge;
 
 - (instancetype)init {
   self = [super init];
@@ -54,41 +51,40 @@ RCT_EXPORT_MODULE()
 }
 
 - (void)onTimezoneChanged {
-  RCTCxxBridge *cxxBridge = (RCTCxxBridge *)self.bridge;
-  if (cxxBridge == nil) {
-    NSLog(@"TimezoneHermesFix: cxxBridge is null");
+  if (_jsInvoker == nullptr) {
+    NSLog(@"TimezoneHermesFix: jsInvoker is null");
     return;
   }
-  
-  [cxxBridge dispatchBlock:^{
-    facebook::jsi::Runtime *jsiRuntime = (facebook::jsi::Runtime *)cxxBridge.runtime;
-    if (jsiRuntime == nil) {
-      NSLog(@"TimezoneHermesFix: jsiRuntime is null");
-      return;
-    }
-    
+
+  __weak TimezoneHermesFix *weakSelf = self;
+  _jsInvoker->invokeAsync([weakSelf](facebook::jsi::Runtime &runtime) {
     facebook::hermes::HermesRuntime *hermesRuntime =
-    reinterpret_cast<facebook::hermes::HermesRuntime*>(jsiRuntime);
-    
+    dynamic_cast<facebook::hermes::HermesRuntime *>(&runtime);
+
     if (hermesRuntime != nullptr) {
       try {
         hermesRuntime->resetTimezoneCache();
-        [self emitOnTimezoneChange:[self getCurrentTimeZone]];
-        
+
+        TimezoneHermesFix *strongSelf = weakSelf;
+        if (strongSelf != nil) {
+          [strongSelf emitOnTimezoneChange:[strongSelf getCurrentTimeZone]];
+        }
+
         NSLog(@"TimezoneHermesFix: Successfully called resetTimezoneCache on Hermes runtime");
       } catch (const std::exception &e) {
         NSLog(@"TimezoneHermesFix: Exception calling resetTimezoneCache: %s", e.what());
       }
     } else {
-      NSLog(@"TimezoneHermesFix: reinterpret_cast to HermesRuntime failed");
+      NSLog(@"TimezoneHermesFix: dynamic_cast to HermesRuntime failed");
     }
-  } queue:RCTJSThread];
+  });
 }
 
 /// CODEGEN
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
 (const facebook::react::ObjCTurboModule::InitParams &)params
 {
+  _jsInvoker = params.jsInvoker;
   return std::make_shared<facebook::react::NativeTimezoneHermesFixSpecJSI>(params);
 }
 
