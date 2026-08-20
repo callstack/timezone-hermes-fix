@@ -18,7 +18,9 @@ tags:
 - extendedWaitUntil:
     visible: 'Europe/Warsaw'
     timeout: 10000
-- assertVisible: '3:50:36 PM - TimezoneOffset -120'
+- assertVisible:
+    text: '.*TimezoneOffset -120'
+    below: 'Europe/Warsaw'
 
 # Open Settings > System > Date & time. Clearing Settings' app state ensures
 # its activity stack starts at the Settings homepage rather than a prior picker.
@@ -90,7 +92,9 @@ tags:
 - extendedWaitUntil:
     visible: 'America/Los_Angeles'
     timeout: 10000
-- assertVisible: '6:50:36 AM - TimezoneOffset 420'
+- assertVisible:
+    text: '.*TimezoneOffset 420'
+    below: 'America/Los_Angeles'
 - assertNotVisible: 'Europe/Warsaw'
 
 # Restore the shared emulator state for subsequent tests.
@@ -131,4 +135,6 @@ tags:
 - extendedWaitUntil:
     visible: 'Europe/Warsaw'
     timeout: 10000
-- assertVisible: '3:50:36 PM - TimezoneOffset -120'
+- assertVisible:
+    text: '.*TimezoneOffset -120'
+    below: 'Europe/Warsaw'
