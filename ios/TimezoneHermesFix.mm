@@ -1,16 +1,15 @@
 #import "TimezoneHermesFix.h"
+#import <UIKit/UIKit.h>
 #import <ReactCommon/RCTTurboModule.h>
 #import <ReactCommon/CallInvoker.h>
-#import <React/RCTUIManager.h>
-#import <React/RCTUIManagerUtils.h>
-#import <React/RCTUtils.h>
 #include <jsi/jsi.h>
-#include <hermes/hermes.h>
+#include <jsi/hermes-interfaces.h>
 
 @implementation TimezoneHermesFix
 {
   NSString *_currentTimezoneName;
   std::shared_ptr<facebook::react::CallInvoker> _jsInvoker;
+  BOOL _isObservingTimezoneChanges;
 }
 
 RCT_EXPORT_MODULE()
@@ -19,7 +18,6 @@ RCT_EXPORT_MODULE()
   self = [super init];
   if (self) {
     _currentTimezoneName = [[NSTimeZone localTimeZone] name];
-    [self startTimezoneChangeDetection];
   }
   return self;
 }
@@ -29,21 +27,48 @@ RCT_EXPORT_MODULE()
 }
 
 - (void)startTimezoneChangeDetection {
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(timezoneDidChange:)
-                                               name:NSSystemTimeZoneDidChangeNotification
-                                             object:nil];
+  if (_isObservingTimezoneChanges) {
+    return;
+  }
+
+  NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+  [notificationCenter addObserver:self
+                         selector:@selector(timezoneDidChange:)
+                             name:NSSystemTimeZoneDidChangeNotification
+                           object:nil];
+  [notificationCenter addObserver:self
+                         selector:@selector(applicationDidBecomeActive:)
+                             name:UIApplicationDidBecomeActiveNotification
+                           object:nil];
+  _isObservingTimezoneChanges = YES;
 }
 
 - (void)stopTimezoneChangeDetection {
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:NSSystemTimeZoneDidChangeNotification
-                                                object:nil];
+  if (!_isObservingTimezoneChanges) {
+    return;
+  }
+
+  NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+  [notificationCenter removeObserver:self
+                                 name:NSSystemTimeZoneDidChangeNotification
+                               object:nil];
+  [notificationCenter removeObserver:self
+                                 name:UIApplicationDidBecomeActiveNotification
+                               object:nil];
+  _isObservingTimezoneChanges = NO;
 }
 
 - (void)timezoneDidChange:(NSNotification *)notification {
+  [self checkForTimezoneChange];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+  [self checkForTimezoneChange];
+}
+
+- (void)checkForTimezoneChange {
   NSString *newTimezoneName = [[NSTimeZone localTimeZone] name];
-  
+
   if (![newTimezoneName isEqualToString:_currentTimezoneName]) {
     _currentTimezoneName = newTimezoneName;
     [self onTimezoneChanged];
@@ -58,8 +83,8 @@ RCT_EXPORT_MODULE()
 
   __weak TimezoneHermesFix *weakSelf = self;
   _jsInvoker->invokeAsync([weakSelf](facebook::jsi::Runtime &runtime) {
-    facebook::hermes::HermesRuntime *hermesRuntime =
-    dynamic_cast<facebook::hermes::HermesRuntime *>(&runtime);
+    facebook::hermes::IHermes *hermesRuntime =
+        facebook::jsi::castInterface<facebook::hermes::IHermes>(&runtime);
 
     if (hermesRuntime != nullptr) {
       try {
@@ -75,7 +100,7 @@ RCT_EXPORT_MODULE()
         NSLog(@"TimezoneHermesFix: Exception calling resetTimezoneCache: %s", e.what());
       }
     } else {
-      NSLog(@"TimezoneHermesFix: dynamic_cast to HermesRuntime failed");
+      NSLog(@"TimezoneHermesFix: active JS runtime does not implement IHermes");
     }
   });
 }
@@ -85,6 +110,7 @@ RCT_EXPORT_MODULE()
 (const facebook::react::ObjCTurboModule::InitParams &)params
 {
   _jsInvoker = params.jsInvoker;
+  [self startTimezoneChangeDetection];
   return std::make_shared<facebook::react::NativeTimezoneHermesFixSpecJSI>(params);
 }
 
