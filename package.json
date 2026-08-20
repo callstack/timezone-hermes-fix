@@ -39,7 +39,8 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
     "release": "release-it --only-version",
-    "e2e:android": "maestro test .maestro/timezone-refresh.android.yaml"
+    "e2e:android": "maestro test .maestro/timezone-refresh.android.yaml",
+    "e2e:ios": "agent-device test .maestro/timezone-refresh.ios.yaml --maestro --device iPhone"
   },
   "keywords": [
     "react-native",
