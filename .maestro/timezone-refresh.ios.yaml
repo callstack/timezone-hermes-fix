@@ -1,0 +1,77 @@
+# Verifies that the native Hermes timezone cache is refreshed after an iPhone
+# timezone change. This flow is executed by agent-device's Maestro-compatible
+# runner and restores the phone to Europe/Warsaw when it completes.
+#
+# Prerequisites:
+# - A connected iPhone with timezonehermesfix.example installed.
+# - The example app starts in Europe/Warsaw.
+# - Settings > General > Date & Time is the current Settings screen. The flow
+#   returns to that screen for its next invocation.
+# - Set Automatically is disabled. The flow intentionally keeps that
+#   manual-state setting unchanged.
+
+appId: timezonehermesfix.example
+name: Refresh Hermes timezone after iOS timezone change
+tags:
+  - ios
+  - manual-device-state
+  - regression
+  - agent-device
+---
+- launchApp: timezonehermesfix.example
+- extendedWaitUntil:
+    visible: 'Europe/Warsaw'
+    timeout: 10000
+- assertVisible:
+    text: '.*TimezoneOffset -120'
+
+# iOS retains its last Settings screen; this flow starts and ends on Date &
+# Time rather than attempting to clear Settings state.
+- launchApp:
+    appId: com.apple.Preferences
+    stopApp: false
+- extendedWaitUntil:
+    visible: 'Time Zone'
+    timeout: 5000
+- tapOn: 'Time Zone'
+- eraseText: 50
+- inputText: 'Los Angeles'
+- extendedWaitUntil:
+    visible: 'Los Angeles, USA'
+    timeout: 5000
+- tapOn: 'Los Angeles, USA'
+
+# Foreground the existing process rather than restarting it.
+- launchApp:
+    appId: timezonehermesfix.example
+    stopApp: false
+- extendedWaitUntil:
+    visible: 'America/Los_Angeles'
+    timeout: 10000
+- assertVisible:
+    text: '.*TimezoneOffset 420'
+- assertNotVisible: 'Europe/Warsaw'
+
+# Restore the shared device state.
+- launchApp:
+    appId: com.apple.Preferences
+    stopApp: false
+- extendedWaitUntil:
+    visible: 'Time Zone'
+    timeout: 5000
+- tapOn: 'Time Zone'
+- eraseText: 50
+- inputText: 'Warsaw'
+- extendedWaitUntil:
+    visible: 'Warsaw, Poland'
+    timeout: 5000
+- tapOn: 'Warsaw, Poland'
+
+- launchApp:
+    appId: timezonehermesfix.example
+    stopApp: false
+- extendedWaitUntil:
+    visible: 'Europe/Warsaw'
+    timeout: 10000
+- assertVisible:
+    text: '.*TimezoneOffset -120'

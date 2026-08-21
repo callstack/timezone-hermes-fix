@@ -6,8 +6,9 @@
 
 | Library Version | React Native Version |
 | --------------- | -------------------- |
-| 0.1.x - 0.3.x   | 0.80.2 - 0.81.X      |
-| 0.4.0+          | 0.82.x and above     |
+| 0.1.x - 0.3.x   | 0.80.2 - 0.81.x      |
+| 0.4.x           | 0.82.x - 0.86.x      |
+| 0.5.x           | 0.87.x and above     |
 
 ## 🔧 The Problem
 

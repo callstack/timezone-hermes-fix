@@ -1,0 +1,140 @@
+# Verifies that the native Hermes timezone cache is refreshed after Android's
+# system timezone changes. The flow returns the emulator to Europe/Warsaw.
+#
+# Prerequisites:
+# - Android emulator running with timezonehermesfix.example installed.
+# - The emulator starts in Europe/Warsaw (the flow verifies this).
+
+appId: com.android.settings
+name: Refresh Hermes timezone after Android timezone change
+tags:
+  - android
+  - manual-device-state
+  - regression
+---
+# Confirm the initial Hermes-aware card reflects the expected fixed date in
+# Europe/Warsaw before changing the device timezone.
+- launchApp: timezonehermesfix.example
+- extendedWaitUntil:
+    visible: 'Europe/Warsaw'
+    timeout: 10000
+- assertVisible:
+    text: '.*TimezoneOffset -120'
+    below: 'Europe/Warsaw'
+
+# Open Settings > System > Date & time. Clearing Settings' app state ensures
+# its activity stack starts at the Settings homepage rather than a prior picker.
+- launchApp:
+    appId: com.android.settings
+    clearState: true
+- scrollUntilVisible:
+    element: 'System'
+    direction: DOWN
+    timeout: 10000
+- tapOn: 'System'
+- extendedWaitUntil:
+    visible: 'Date & time'
+    timeout: 5000
+- tapOn: 'Date & time'
+- extendedWaitUntil:
+    visible: 'Automatic time zone'
+    timeout: 5000
+
+# A network-provided timezone prevents a manual choice. Disable it only when
+# it is enabled, so this flow works with either starting switch state.
+- runFlow:
+    when:
+      visible:
+        containsDescendants:
+          - text: 'Automatic time zone'
+          - id: 'com.android.settings:id/switchWidget'
+            checked: true
+    commands:
+      - tapOn: 'Automatic time zone'
+
+- tapOn:
+    text: 'Time zone'
+    below: 'Automatic time zone'
+- extendedWaitUntil:
+    visible: 'Warsaw (GMT+02:00)'
+    timeout: 5000
+
+# Change Europe/Warsaw to America/Los_Angeles through the device Settings UI.
+- tapOn: 'Region'
+- extendedWaitUntil:
+    visible:
+      id: 'android:id/search_src_text'
+    timeout: 5000
+- inputText: 'United States'
+- extendedWaitUntil:
+    visible:
+      id: 'com.android.settings:id/title'
+      text: 'United States'
+    timeout: 5000
+- hideKeyboard
+- tapOn:
+    id: 'com.android.settings:id/title'
+    text: 'United States'
+- extendedWaitUntil:
+    visible:
+      id: 'com.android.settings:id/title'
+      text: 'Los Angeles'
+    timeout: 5000
+- tapOn:
+    id: 'com.android.settings:id/title'
+    text: 'Los Angeles'
+
+# Foreground the backgrounded app without restarting it. It must observe the
+# changed device timezone rather than return Hermes' prior Europe/Warsaw value.
+- launchApp:
+    appId: timezonehermesfix.example
+    stopApp: false
+- extendedWaitUntil:
+    visible: 'America/Los_Angeles'
+    timeout: 10000
+- assertVisible:
+    text: '.*TimezoneOffset 420'
+    below: 'America/Los_Angeles'
+- assertNotVisible: 'Europe/Warsaw'
+
+# Restore the shared emulator state for subsequent tests.
+- launchApp:
+    appId: com.android.settings
+    clearState: true
+- scrollUntilVisible:
+    element: 'System'
+    direction: DOWN
+    timeout: 10000
+- tapOn: 'System'
+- tapOn: 'Date & time'
+- tapOn:
+    text: 'Time zone'
+    below: 'Automatic time zone'
+- tapOn: 'Region'
+- extendedWaitUntil:
+    visible:
+      id: 'android:id/search_src_text'
+    timeout: 5000
+- inputText: 'Poland'
+- extendedWaitUntil:
+    visible:
+      id: 'com.android.settings:id/title'
+      text: 'Poland'
+    timeout: 5000
+- hideKeyboard
+- tapOn:
+    id: 'com.android.settings:id/title'
+    text: 'Poland'
+- extendedWaitUntil:
+    visible: 'Warsaw (GMT+02:00)'
+    timeout: 5000
+# Foreground the same process after restoring the device timezone.
+- launchApp:
+    appId: timezonehermesfix.example
+    stopApp: false
+- extendedWaitUntil:
+    visible: 'Europe/Warsaw'
+    timeout: 10000
+- assertVisible:
+    text: '.*TimezoneOffset -120'
+    below: 'Europe/Warsaw'
