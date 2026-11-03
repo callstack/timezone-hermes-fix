@@ -23,8 +23,6 @@ set_target_properties(
 
 find_package(fbjni REQUIRED CONFIG)
 find_package(ReactAndroid REQUIRED CONFIG)
-find_package(hermes-engine REQUIRED CONFIG)
-string(APPEND CMAKE_CXX_FLAGS " -DJS_RUNTIME_HERMES=1")
 
 target_include_directories(
     ${PACKAGE_NAME}
@@ -33,9 +31,6 @@ target_include_directories(
     "${REACT_NATIVE_DIR}/ReactCommon"
     "${REACT_NATIVE_DIR}/ReactCommon/callinvoker"
     "${REACT_NATIVE_DIR}/ReactAndroid/src/main/jni/react/turbomodule"
-    # Add Hermes include directories
-    "${REACT_NATIVE_DIR}/ReactCommon/hermes"
-    "${REACT_NATIVE_DIR}/third-party/hermes/API"
 )
 
 # Link libraries
@@ -57,7 +52,6 @@ target_link_libraries(
     log
     fbjni::fbjni
     ReactAndroid::jsi
-    hermes-engine::hermesvm
 )
 
 # Enable Android 16kb native library alignment

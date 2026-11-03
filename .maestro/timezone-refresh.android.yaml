@@ -37,26 +37,27 @@ tags:
     timeout: 5000
 - tapOn: 'Date & time'
 - extendedWaitUntil:
-    visible: 'Automatic time zone'
+    visible: 'Automatic time zone|Set automatically'
     timeout: 5000
 
-# A network-provided timezone prevents a manual choice. Disable it only when
+# Android 15+ labels the switch "Set automatically"; older versions use
+# "Automatic time zone". A network-provided timezone prevents a manual choice. Disable it only when
 # it is enabled, so this flow works with either starting switch state.
 - runFlow:
     when:
       visible:
         containsDescendants:
-          - text: 'Automatic time zone'
+          - text: 'Automatic time zone|Set automatically'
           - id: 'com.android.settings:id/switchWidget'
             checked: true
     commands:
-      - tapOn: 'Automatic time zone'
+      - tapOn: 'Automatic time zone|Set automatically'
 
 - tapOn:
     text: 'Time zone'
-    below: 'Automatic time zone'
+    below: 'Automatic time zone|Set automatically'
 - extendedWaitUntil:
-    visible: 'Warsaw (GMT+02:00)'
+    visible: 'Warsaw \(GMT\+0[12]:00\)'
     timeout: 5000
 
 # Change Europe/Warsaw to America/Los_Angeles through the device Settings UI.
@@ -68,20 +69,19 @@ tags:
 - inputText: 'United States'
 - extendedWaitUntil:
     visible:
-      id: 'com.android.settings:id/title'
+      id: '(com.android.settings|android):id/title'
       text: 'United States'
     timeout: 5000
-- hideKeyboard
 - tapOn:
-    id: 'com.android.settings:id/title'
+    id: '(com.android.settings|android):id/title'
     text: 'United States'
 - extendedWaitUntil:
     visible:
-      id: 'com.android.settings:id/title'
+      id: '(com.android.settings|android):id/title'
       text: 'Los Angeles'
     timeout: 5000
 - tapOn:
-    id: 'com.android.settings:id/title'
+    id: '(com.android.settings|android):id/title'
     text: 'Los Angeles'
 
 # Foreground the backgrounded app without restarting it. It must observe the
@@ -109,7 +109,7 @@ tags:
 - tapOn: 'Date & time'
 - tapOn:
     text: 'Time zone'
-    below: 'Automatic time zone'
+    below: 'Automatic time zone|Set automatically'
 - tapOn: 'Region'
 - extendedWaitUntil:
     visible:
@@ -118,15 +118,14 @@ tags:
 - inputText: 'Poland'
 - extendedWaitUntil:
     visible:
-      id: 'com.android.settings:id/title'
+      id: '(com.android.settings|android):id/title'
       text: 'Poland'
     timeout: 5000
-- hideKeyboard
 - tapOn:
-    id: 'com.android.settings:id/title'
+    id: '(com.android.settings|android):id/title'
     text: 'Poland'
 - extendedWaitUntil:
-    visible: 'Warsaw (GMT+02:00)'
+    visible: 'Warsaw \(GMT\+0[12]:00\)'
     timeout: 5000
 # Foreground the same process after restoring the device timezone.
 - launchApp:
