@@ -1606,7 +1606,7 @@ PODS:
   - ReactNativeDependencies (0.87.0)
   - SocketRocket (0.7.1):
     - ReactNativeDependencies
-  - TimezoneHermesFix (0.4.0):
+  - TimezoneHermesFix (0.5.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1980,7 +1980,7 @@ SPEC CHECKSUMS:
   ReactCommon: 31d05b76329c8b3c9ef37fff8212f830925a2535
   ReactNativeDependencies: ec5530432d8191b38e278117d498aaff05ea9d6f
   SocketRocket: d57b1af80c029e12a75cd9b218287c67381e4593
-  TimezoneHermesFix: 09b96682514f69841fff3a2bcd4473ac989e7b65
+  TimezoneHermesFix: 549b3000eb12fc6e21179a7565c200a7419af7d6
   Yoga: 58b502c52b14ad3c4468805d461fc37d275c2a42
 
 PODFILE CHECKSUM: 900421b9438f93d40938706d28bebb2a68c5b6b3

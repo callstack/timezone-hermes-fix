@@ -4,35 +4,45 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.util.Log
 import com.facebook.jni.HybridData
+import com.facebook.proguard.annotations.DoNotStrip
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
+import com.facebook.react.common.annotations.FrameworkAPI
 import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.turbomodule.core.CallInvokerHolderImpl
 import java.util.Date
 import java.util.TimeZone
 
 /**
- * Resets the Hermes zone cache after the device zone changes. Hermes may be
- * used only on the JS thread, so the reset runs there. The runtime comes from
- * the React context, which works with the New Architecture; the old bridge
- * (catalystInstance) is not used. A resume checks the zone too: a broadcast
- * sent while the app was cached can arrive late.
+ * Resets the Hermes zone cache after the device zone changes. The reset is
+ * scheduled through this module's CallInvoker, which runs it on the JS thread
+ * with the live runtime of the instance the module belongs to (as on iOS).
+ * A resume checks the zone too: a broadcast sent while the app was cached can
+ * arrive late. The zone is read from the system property bionic and Hermes
+ * use, because java.util.TimeZone's per-process default may still be stale.
  */
+@OptIn(FrameworkAPI::class)
 @ReactModule(name = TimezoneHermesFixModule.NAME)
 class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
   NativeTimezoneHermesFixSpec(reactContext), LifecycleEventListener {
 
-  private val mHybridData: HybridData = initHybrid()
+  private val mHybridData: HybridData =
+    initHybrid(reactContext.jsCallInvokerHolder as? CallInvokerHolderImpl)
   private val mReactContext: ReactApplicationContext = reactContext
   private var receiver: BroadcastReceiver? = null
-  private var currentTimezoneName: String = TimeZone.getDefault().id
 
-  private external fun initHybrid(): HybridData
-  private external fun resetTzHermes(jsRuntimePtr: Long)
+  // The zone Hermes was last reset to. Updated only after a reset has run,
+  // so a reset that could not happen is retried on the next check.
+  private var appliedTimezoneName: String = systemTimezoneId()
+
+  private external fun initHybrid(callInvokerHolder: CallInvokerHolderImpl?): HybridData
+  private external fun resetTzHermes(timezoneName: String): Boolean
 
   init {
     receiver = object : BroadcastReceiver() {
@@ -52,21 +62,28 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
 
   @Synchronized
   private fun checkForTimezoneChange() {
-    val newTimezoneName = TimeZone.getDefault().id
-    if (newTimezoneName == currentTimezoneName) return
-    currentTimezoneName = newTimezoneName
-    mReactContext.runOnJSQueueThread {
-      try {
-        val jsRuntimePtr = mReactContext.javaScriptContextHolder?.get() ?: 0L
-        if (jsRuntimePtr == 0L) {
-          android.util.Log.e(NAME, "No JS runtime")
-          return@runOnJSQueueThread
-        }
-        resetTzHermes(jsRuntimePtr)
-        emitOnTimezoneChange(getCurrentTimeZone())
-      } catch (e: Exception) {
-        android.util.Log.e(NAME, "Error resetting Hermes timezone cache: ${e.message}", e)
+    try {
+      val newTimezoneName = systemTimezoneId()
+      if (newTimezoneName == appliedTimezoneName) return
+      if (!resetTzHermes(newTimezoneName)) {
+        Log.e(NAME, "Could not schedule the Hermes timezone cache reset")
       }
+    } catch (e: Throwable) {
+      Log.e(NAME, "Error resetting Hermes timezone cache: ${e.message}", e)
+    }
+  }
+
+  /** Called from C++ on the JS thread after Hermes reset its zone cache. */
+  @DoNotStrip
+  private fun onHermesTimezoneReset(timezoneName: String) {
+    synchronized(this) {
+      if (timezoneName == appliedTimezoneName) return
+      appliedTimezoneName = timezoneName
+    }
+    try {
+      emitOnTimezoneChange(getCurrentTimeZone())
+    } catch (e: Exception) {
+      Log.e(NAME, "Error emitting timezone change: ${e.message}", e)
     }
   }
 
@@ -75,7 +92,7 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
   }
 
   override fun getCurrentTimeZone(): WritableMap {
-    val tz = TimeZone.getDefault()
+    val tz = TimeZone.getTimeZone(systemTimezoneId())
     val timezoneInfo = WritableNativeMap()
     timezoneInfo.putString("name", tz.id)
     timezoneInfo.putInt("secondsFromGMT", tz.getOffset(Date().time) / 1000)
@@ -106,5 +123,11 @@ class TimezoneHermesFixModule(reactContext: ReactApplicationContext) :
       System.loadLibrary("timezone-hermes-fix")
     }
     const val NAME = "TimezoneHermesFix"
+
+    @JvmStatic
+    private external fun getSystemTimezoneId(): String
+
+    private fun systemTimezoneId(): String =
+      getSystemTimezoneId().ifEmpty { TimeZone.getDefault().id }
   }
 }
